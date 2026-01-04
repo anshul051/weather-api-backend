@@ -4,7 +4,7 @@ const router = Router();
 
 router.get("/", (req, res) => {
     res.status(200).json({
-        status: "ok",
+        status: "okayish",
         uptime: process.uptime(),
         message: "Health check passed",
         timestamp: new Date().toISOString(),
