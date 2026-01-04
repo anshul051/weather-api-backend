@@ -1,6 +1,8 @@
+import { getCurrentWeather } from "../services/weather.services.js";
 import { ApiError } from "../utils/ApiError.js";
 import { HTTP_STATUS } from "../constants/httpStatus.js";
 
+/*
 export const getCurrentWeather = (req, res, next) => {
     const { city, units } = req.query;
 
@@ -27,4 +29,31 @@ export const getCurrentWeather = (req, res, next) => {
         data,
         timestamp: new Date().toISOString(),
     });
+};
+*/
+
+export const getCurrentWeatherController = async (req, res, next) => {
+    try {
+        const { city, units } = req.query;
+
+        if(!city || city.trim() === "") {
+            throw new ApiError(
+                HTTP_STATUS.BAD_REQUEST,
+                "City query parameter is required"
+            );
+        }
+
+        const weather = await getCurrentWeather({
+            city,
+            units: units || "metric",
+        });
+
+        res.status(200).json({
+            status: "success",
+            data: weather,
+            timestamp: new Date().toISOString(),
+        });
+    } catch (err) {
+        next(err);
+    }
 };

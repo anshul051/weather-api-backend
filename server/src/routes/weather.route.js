@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { getCurrentWeather } from "../controllers/weather.controller.js";
+import { getCurrentWeatherController } from "../controllers/weather.controller.js";
 
 const router = Router();
 
@@ -12,6 +12,6 @@ router.get("/current", (req, res) => {
 });
 */
 
-router.get("/current", getCurrentWeather);
+router.get("/current", getCurrentWeatherController);
 
 export default router;
