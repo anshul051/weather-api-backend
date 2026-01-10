@@ -1,7 +1,9 @@
-import dotenv from 'dotenv';
+import dotenv from "dotenv";
+
 dotenv.config();
 
 export const env = {
-    NODE_ENV: process.env.NODE_ENV || 'development',
-    PORT: process.env.PORT || 5000
+  PORT: process.env.PORT,
+  OPENWEATHER_API_KEY: process.env.OPENWEATHER_API_KEY,
+  REDIS_URL: process.env.REDIS_URL,
 };

@@ -1,4 +1,5 @@
 import { redisClient } from "../config/redis.js";
+import { fetchCurrentWeather } from "../providers/weather.provider.js";
 
 const TTL_SECONDS = 300; // 5 minutes
 
@@ -64,14 +65,8 @@ export const getCurrentWeather = async ({ city, units }) => {
     console.error("Redis GET failed, bypassing cache: ", err.message);
   }
 
-  // 2. Compute data (mock for now)
-  const data = {
-    city,
-    units,
-    temperature: 30,
-    condition: "clear",
-    source: "mock",
-  };
+  // fetch from provider (REAL DATA NOW)
+  const data = await fetchCurrentWeather({ city, units });  
 
   // 3. Try cache write (gracefully handle errors)
   try {
