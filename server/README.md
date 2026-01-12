@@ -145,7 +145,74 @@ Used by:
 - Kubernetes probes
 
 
-## 📡 API Endpoints
+## API Endpoints
 
 ### Get Current Weather
-``GET /api/v1/weather/current?city=London&units=metric``
+```GET /api/v1/weather/current?city=London&units=metric```
+
+### Headers: 
+```x-api-key: weather_dev_123```
+
+### Response: 
+
+Response:
+```json
+{
+  "status": "success",
+  "data": {
+    "city": "London",
+    "units": "metric",
+    "temperature": 4.75,
+    "condition": "Clouds",
+    "source": "openweathermap",
+    "cached": true
+  },
+  "timestamp": "2026-01-11T20:09:54.335Z"
+}
+```
+
+## Error Handling
+Centralized error handling middleware ensures:
+- Consistent error responses
+- No internal details leaked
+- Clean HTTP status codes
+
+## Environment Variables
+Create a .env file in server/:
+```javascript
+PORT=5000
+OPENWEATHER_API_KEY=your_api_key_here
+REDIS_URL=redis://127.0.0.1:6379
+```
+
+## Running Locally
+### Backend
+```
+cd server
+npm install
+npm run dev
+```
+
+### Redis (WSL / Linux)
+```
+redis-server
+redis-cli ping
+```
+
+## Engineering Decisions (Why This Matters)
+This project demonstrates:
+- How real APIs are protected
+- How caching actually works in production
+- How Redis failures are handled safely
+- How to design for scale, not demos
+- How to structure backend code professionally
+
+This is not **CRUD practice** — this is **backend system design in code.**
+
+## Current Status
+- Backend: ✅ Complete
+- Frontend dashboard: ⏳ In progress
+- Deployment: ⏳ Planned
+
+## License
+MIT — use it, extend it, break it, learn from it.
