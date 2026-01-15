@@ -70,6 +70,9 @@ src/
 ├── app.js                   # Express app wiring
 └── server.js                # Server bootstrap
 ```
+## Request Lifecycle
+```Request → Auth → Rate Limit → Cache → Provider → Response```
+
 
 ## Authentication (API Key)
 
@@ -98,6 +101,11 @@ Rate limiting is enforced **per API key** using Redis.
 - Distributed-safe
 - Shared state across instances
 - Industry-standard for API throttling
+
+## Testing Strategy
+- Manual testing via Postman
+- Cache hit/miss validation
+- Rate limit boundary testing
 
 ## Caching Strategy
 
@@ -199,6 +207,11 @@ redis-server
 redis-cli ping
 ```
 
+## Failure Modes
+- Redis down → cache + rate limit bypassed
+- Provider down → 502 surfaced cleanly
+- Invalid API key → fast 401
+
 ## Engineering Decisions (Why This Matters)
 This project demonstrates:
 - How real APIs are protected
@@ -213,6 +226,11 @@ This is not **CRUD practice** — this is **backend system design in code.**
 - Backend: ✅ Complete
 - Frontend dashboard: ⏳ In progress
 - Deployment: ⏳ Planned
+
+## Non-Goals
+- No user authentication (API key–based access only)
+- No persistent database (stateless API)
+- No frontend UI (API-first design)
 
 ## License
 MIT — use it, extend it, break it, learn from it.
