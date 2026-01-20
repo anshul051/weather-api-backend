@@ -1,20 +1,25 @@
 import express from "express";
+import cors from "cors";
+
 import healthRouter from "./routes/health.route.js";
+import weatherRouter from "./routes/weather.routes.js";
 import { notFound } from "./middlewares/notFound.middleware.js";
 import { errorHandler } from "./middlewares/errorHandler.middleware.js";
-import weatherRouter from "./routes/weather.routes.js";
-import cors from "cors";
 
 const app = express();
 
 app.use(
   cors({
-    origin:[
+    origin: [
       "http://localhost:5173",
-      "https://weather-api-frontend.onrender.com"
+      "https://weather-api-frontend.onrender.com",
     ],
+    methods: ["GET", "POST", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "x-api-key"],
   })
 );
+
+app.options("*", cors());
 
 app.use(express.json());
 
