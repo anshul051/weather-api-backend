@@ -14,12 +14,10 @@ app.use(
       "http://localhost:5173",
       "https://weather-api-frontend.onrender.com",
     ],
-    methods: ["GET", "POST", "OPTIONS"],
+    methods: ["GET", "POST"],
     allowedHeaders: ["Content-Type", "x-api-key"],
   })
 );
-
-app.options("/*", cors());
 
 app.use(express.json());
 
