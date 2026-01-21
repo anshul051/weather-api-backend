@@ -12,10 +12,14 @@ app.use(
   cors({
     origin: [
       "http://localhost:5173",
+      "http://localhost:5174", // Add this - Vite's alternate port
+      "http://localhost:3000",  // Add this - common React port
       "https://weather-api-frontend.onrender.com",
+      "https://weather-api-frontend-plum.vercel.app", // If deployed on Vercel
     ],
     methods: ["GET", "POST", "OPTIONS"],
     allowedHeaders: ["Content-Type", "x-api-key"],
+    credentials: true, // Add this if you need cookies/auth
   })
 );
 
