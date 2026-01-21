@@ -4,6 +4,10 @@ const WINDOW_SECONDS = 60;   // 1 minute
 const MAX_REQUESTS = 10;     // max 10 requests per window
 
 export const rateLimitMiddleware = async (req, res, next) => {
+  if(req.method === "OPTIONS") {
+      return next();
+  }
+
   const apiKey = req.headers["x-api-key"];
   if (!apiKey) return next();
 

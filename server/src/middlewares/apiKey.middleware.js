@@ -1,6 +1,10 @@
 import { getApiKey } from "../config/apiKeys.js";
 
 export const apiKeyMiddleware = (req,res,next) => {
+    if(req.method === "OPTIONS") {
+        return next();
+    }
+
     //1. Read API key from header
     const apiKey = req.headers["x-api-key"];
 
