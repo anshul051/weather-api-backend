@@ -14,7 +14,7 @@ app.use(
       "http://localhost:5173",
       "https://weather-api-frontend.onrender.com",
     ],
-    methods: ["GET", "POST"],
+    methods: ["GET", "POST", "OPTIONS"],
     allowedHeaders: ["Content-Type", "x-api-key"],
   })
 );
