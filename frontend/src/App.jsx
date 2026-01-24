@@ -1,7 +1,7 @@
 import { useState } from "react";
 
 // const API_BASE_URL = "https://weather-api-backend.onrender.com";
-const API_BASE_URL = "http://localhost:5000";
+const API_BASE_URL = "https://weather-api-backend-hk5u.onrender.com";
 const API_KEY = "weather_dev_123";
 
 function App() {
