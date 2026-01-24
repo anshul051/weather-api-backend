@@ -1,6 +1,7 @@
 import { useState } from "react";
 
-const API_BASE_URL = "https://weather-api-backend.onrender.com";
+// const API_BASE_URL = "https://weather-api-backend.onrender.com";
+const API_BASE_URL = "http://localhost:5000";
 const API_KEY = "weather_dev_123";
 
 function App() {
@@ -72,7 +73,7 @@ function App() {
           <button
             onClick={fetchWeather}
             disabled={!city || loading}
-            className="bg-black text-white px-4 rounded disabled:opacity-50"
+            className="bg-black text-white px-4 rounded disabled:opacity-50 cursor-pointer"
           >
             {loading ? "Loading..." : "Fetch"}
           </button>

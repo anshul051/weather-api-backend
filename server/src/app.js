@@ -8,6 +8,7 @@ import { errorHandler } from "./middlewares/errorHandler.middleware.js";
 
 const app = express();
 
+// CORS configuration - must be before routes
 app.use(
   cors({
     origin: [
@@ -23,11 +24,14 @@ app.use(
   })
 );
 
+// Body parser middleware
 app.use(express.json());
 
+// Routes
 app.use("/health", healthRouter);
 app.use("/api/v1/weather", weatherRouter);
 
+// Error handling middleware - must be last
 app.use(notFound);
 app.use(errorHandler);
 
