@@ -80,7 +80,7 @@ function App() {
             <button
               onClick={fetchWeather}
               disabled={!city || loading}
-              className="bg-gray-700 hover:bg-gray-600 text-white px-5 py-2.5 rounded disabled:opacity-50 disabled:cursor-not-allowed w-full sm:w-auto"
+              className="bg-blue-800 hover:bg-blue-700 text-white px-5 py-2.5 rounded disabled:opacity-50 disabled:cursor-not-allowed w-full sm:w-auto cursor-pointer"
             >
               {loading ? "Loading..." : "Fetch"}
             </button>
