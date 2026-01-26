@@ -1,6 +1,5 @@
 import { useState } from "react";
 
-// const API_BASE_URL = "https://weather-api-backend.onrender.com";
 const API_BASE_URL = "https://weather-api-backend-hk5u.onrender.com";
 const API_KEY = "weather_dev_123";
 
@@ -44,59 +43,134 @@ function App() {
     }
   };
 
+  const handleKeyPress = (e) => {
+    if (e.key === 'Enter' && city) {
+      fetchWeather();
+    }
+  };
+
   return (
     <div className="min-h-screen bg-gray-900 p-4 sm:p-8">
-      <div className="max-w-2xl mx-auto bg-gray-800 shadow-xl rounded p-4 sm:p-6">
-        <h1 className="text-xl sm:text-2xl font-bold mb-4 sm:mb-6 text-white">
+      <div className="max-w-2xl mx-auto">
+        <h1 className="text-2xl font-semibold mb-8 text-white">
           Weather API Dashboard
         </h1>
 
-        {/* Inputs */}
-        <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 mb-4">
-          <input
-            type="text"
-            placeholder="City (e.g. London)"
-            className="border border-gray-600 bg-gray-700 text-white placeholder-gray-400 p-2 rounded w-full focus:outline-none focus:ring-2 focus:ring-blue-500"
-            value={city}
-            onChange={(e) => setCity(e.target.value)}
-          />
+        {/* Input Card */}
+        <div className="bg-gray-800 rounded-lg p-6 mb-6">
+          <div className="flex flex-col sm:flex-row gap-3">
+            <input
+              type="text"
+              placeholder="Enter city"
+              className="bg-gray-700 text-white placeholder-gray-500 p-2.5 rounded w-full focus:outline-none focus:ring-1 focus:ring-gray-600"
+              value={city}
+              onChange={(e) => setCity(e.target.value)}
+              onKeyPress={handleKeyPress}
+            />
 
-          <select
-            className="border border-gray-600 bg-gray-700 text-white p-2 rounded w-full sm:w-auto focus:outline-none focus:ring-2 focus:ring-blue-500"
-            value={units}
-            onChange={(e) => setUnits(e.target.value)}
-          >
-            <option value="metric">Metric</option>
-            <option value="imperial">Imperial</option>
-          </select>
+            <select
+              className="bg-gray-700 text-white p-2.5 rounded w-full sm:w-auto focus:outline-none focus:ring-1 focus:ring-gray-600"
+              value={units}
+              onChange={(e) => setUnits(e.target.value)}
+            >
+              <option value="metric">Metric</option>
+              <option value="imperial">Imperial</option>
+            </select>
 
-          <button
-            onClick={fetchWeather}
-            disabled={!city || loading}
-            className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer w-full sm:w-auto transition-colors"
-          >
-            {loading ? "Loading..." : "Fetch"}
-          </button>
+            <button
+              onClick={fetchWeather}
+              disabled={!city || loading}
+              className="bg-gray-700 hover:bg-gray-600 text-white px-5 py-2.5 rounded disabled:opacity-50 disabled:cursor-not-allowed w-full sm:w-auto"
+            >
+              {loading ? "Loading..." : "Fetch"}
+            </button>
+          </div>
         </div>
 
-        {/* Status */}
-        {status && (
-          <div className="text-sm text-gray-300 mb-2">
-            HTTP Status: {status}
+        {/* Response Card */}
+        {(response || error) && (
+          <div className="bg-gray-800 rounded-lg p-6 mb-6">
+            {status && (
+              <div className="text-sm text-gray-400 mb-4">
+                Status: {status}
+              </div>
+            )}
+
+            {response && response.status === "success" && (
+              <div className="space-y-6">
+                {/* Weather Header */}
+                <div className="flex items-center justify-between pb-4 border-b border-gray-700">
+                  <div>
+                    <h2 className="text-2xl font-medium text-white">
+                      {response.data.city}
+                    </h2>
+                    <p className="text-gray-500 text-sm mt-1">
+                      {new Date(response.timestamp).toLocaleString()}
+                    </p>
+                  </div>
+                  {response.data.cached && (
+                    <span className="text-gray-500 text-xs">
+                      Cached
+                    </span>
+                  )}
+                </div>
+
+                {/* Weather Details */}
+                <div className="space-y-3">
+                  <div className="flex justify-between items-center">
+                    <span className="text-gray-400">Temperature</span>
+                    <span className="text-2xl font-medium text-white">
+                      {response.data.temperature}°{units === 'metric' ? 'C' : 'F'}
+                    </span>
+                  </div>
+
+                  <div className="flex justify-between items-center">
+                    <span className="text-gray-400">Condition</span>
+                    <span className="text-white">
+                      {response.data.condition}
+                    </span>
+                  </div>
+
+                  <div className="flex justify-between items-center">
+                    <span className="text-gray-400">Source</span>
+                    <span className="text-white capitalize">
+                      {response.data.source}
+                    </span>
+                  </div>
+                </div>
+
+                {/* Raw JSON Toggle */}
+                <details className="pt-4 border-t border-gray-700">
+                  <summary className="text-gray-400 cursor-pointer hover:text-gray-300 text-sm">
+                    View raw JSON
+                  </summary>
+                  <pre className="bg-gray-900 rounded p-4 text-xs overflow-auto max-h-[300px] text-gray-300 mt-3">
+                    {JSON.stringify(response, null, 2)}
+                  </pre>
+                </details>
+              </div>
+            )}
+
+            {error && (
+              <div>
+                <p className="text-red-400 mb-3">{error.message || "An error occurred"}</p>
+                {error.error && (
+                  <pre className="bg-gray-900 rounded p-4 text-xs overflow-auto max-h-[200px] text-gray-300">
+                    {JSON.stringify(error, null, 2)}
+                  </pre>
+                )}
+              </div>
+            )}
           </div>
         )}
 
-        {/* Output */}
-        <pre className="bg-gray-950 border border-gray-700 rounded p-3 sm:p-4 text-xs sm:text-sm overflow-auto min-h-[200px] max-h-[400px] text-gray-100">
-          {response && JSON.stringify(response, null, 2)}
-          {error && JSON.stringify(error, null, 2)}
-        </pre>
-
-        {/* Notes */}
-        <div className="mt-4 text-xs text-gray-400 space-y-1">
-          <p>• API Key sent via header</p>
-          <p>• Cached responses will show <code className="bg-gray-700 px-1 rounded">"cached": true</code></p>
-          <p>• Rate limit triggers after 10 requests/min</p>
+        {/* Info Card */}
+        <div className="bg-gray-800 rounded-lg p-6">
+          <div className="space-y-2 text-sm text-gray-400">
+            <p>• API key sent via header</p>
+            <p>• Cached responses show "cached": true</p>
+            <p>• Rate limit: 10 requests/min</p>
+          </div>
         </div>
       </div>
     </div>
