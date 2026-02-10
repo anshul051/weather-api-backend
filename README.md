@@ -222,11 +222,6 @@ This project demonstrates:
 
 This is not **CRUD practice** — this is **backend system design in code.**
 
-## Current Status
-- Backend: ✅ Complete
-- Frontend dashboard: ⏳ In progress
-- Deployment: ⏳ Planned
-
 ## Non-Goals
 - No user authentication (API key–based access only)
 - No persistent database (stateless API)
