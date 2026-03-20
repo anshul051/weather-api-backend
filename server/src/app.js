@@ -1,10 +1,10 @@
 import express from "express";
 import cors from "cors";
-
 import healthRouter from "./routes/health.route.js";
 import weatherRouter from "./routes/weather.routes.js";
 import { notFound } from "./middlewares/notFound.middleware.js";
 import { errorHandler } from "./middlewares/errorHandler.middleware.js";
+import { getMetrics, resetMetrics } from "./utils/metrics.js";
 
 const app = express();
 
@@ -23,6 +23,36 @@ app.use(
     credentials: true, // Add this if you need cookies/auth
   })
 );
+
+// Timing middleware - tracks response time for all requests
+app.use((req, res, next) => {
+  const start = Date.now();
+  
+  res.on('finish', () => {
+    const duration = Date.now() - start;
+    console.log(`⏱️  ${req.method} ${req.path} - ${duration}ms - Status: ${res.statusCode}`);
+  });
+  
+  next();
+});
+
+// Metrics endpoint - shows cache performance stats
+app.get("/metrics", (req, res) => {
+  res.json({
+    status: "success",
+    data: getMetrics(),
+    timestamp: new Date().toISOString()
+  });
+});
+
+// Reset metrics endpoint (optional - for testing)
+app.get("/metrics/reset", (req, res) => {
+  resetMetrics();
+  res.json({
+    status: "success",
+    message: "Metrics reset successfully"
+  });
+});
 
 // Body parser middleware
 app.use(express.json());

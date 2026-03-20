@@ -1,5 +1,6 @@
 import { redisClient } from "../config/redis.js";
 import { fetchCurrentWeather } from "../providers/weather.provider.js";
+import { metrics } from "../utils/metrics.js";
 
 const TTL_SECONDS = 300; // 5 minutes
 
@@ -51,11 +52,17 @@ const cached = await redisClient.get(key);
 
 export const getCurrentWeather = async ({ city, units }) => {
   const key = `weather:current:${city}:${units}`;
+  
+  metrics.totalRequests++; // Track total requests
 
   // 1. Try cache read (gracefully handle errors)
   try {
     const cached = await redisClient.get(key);
     if (cached) {
+      metrics.cacheHits++; // Track cache hit
+      const hitRate = ((metrics.cacheHits / metrics.totalRequests) * 100).toFixed(1);
+      console.log(`✅ Cache HIT for ${city} - Hit rate: ${hitRate}%`);
+      
       return {
         ...JSON.parse(cached),
         cached: true,
@@ -65,7 +72,11 @@ export const getCurrentWeather = async ({ city, units }) => {
     console.error("Redis GET failed, bypassing cache: ", err.message);
   }
 
-  // fetch from provider (REAL DATA NOW)
+  metrics.cacheMisses++; // Track cache miss
+  const hitRate = ((metrics.cacheHits / metrics.totalRequests) * 100).toFixed(1);
+  console.log(`❌ Cache MISS for ${city} - Hit rate: ${hitRate}%`);
+
+  // 2. fetch from provider (REAL DATA NOW)
   const data = await fetchCurrentWeather({ city, units });  
 
   // 3. Try cache write (gracefully handle errors)
